@@ -17,6 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dracula">
+      <link rel="icon" href="/Logo.svg" type="image/svg+xml" />
       <Providers>
         <body className={inter.className}>{children}</body>
       </Providers>
