@@ -18,15 +18,12 @@ const LoginForm = () => {
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    // Handle login logic here
-    const result = await signIn("credentials", {
+    await signIn("credentials", {
       redirect: true,
       callbackUrl: "/users",
       username: data.username,
       password: data.password,
     });
-
-    console.log("Result", result);
   };
 
   return (

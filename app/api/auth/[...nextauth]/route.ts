@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
 
 import { BACKEND_URL } from "@/constants";
-import { jwtDecode } from "jwt-decode";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -45,7 +44,7 @@ export const authOptions: NextAuthOptions = {
 
           const user = await res.json();
           if (user && user.accessToken) {
-            return { token: user.accessToken, ...user };
+            return user;
           }
         } catch (error) {
           console.error("Login error:", error);
@@ -58,17 +57,10 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user?.token) {
-        token.accessToken = user.token;
-
-        const decoded = jwtDecode(user.token);
-        token.userId = decoded.sub;
-      }
-      return token;
+      return { ...token, ...user };
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      session.userId = token.sub;
+      session.user = token;
       return session;
     },
   },
