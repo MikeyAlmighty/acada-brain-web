@@ -1,11 +1,10 @@
-const UserPage = () => {
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    bio: "Software Engineer with 10 years of experience in full-stack development.",
-    profilePicture: "https://via.placeholder.com/150",
-  };
+"use client";
 
+import { useSession } from "next-auth/react";
+
+const UserPage = () => {
+  const { data: session } = useSession();
+  console.log("session: ", session);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="flex justify-center h-screen">
@@ -17,9 +16,11 @@ const UserPage = () => {
               </div>
             </div>
             <div className="text-center mt-4">
-              <h2 className="text-lg font-bold">{user.name}</h2>
-              <p className="text-sm text-gray-600">{user.email}</p>
-              <p className="mt-2 text-gray-600">{user.bio}</p>
+              <h2 className="text-lg font-bold text-gray-600">
+                {session?.user?.name}
+              </h2>
+              <p className="text-sm text-gray-600">{session?.user?.email}</p>
+              {/* <p className="mt-2 text-gray-600">{user.bio}</p> */}
             </div>
             <div className="mt-6 flex justify-center">
               <button className="btn btn-primary">Edit Profile</button>

@@ -26,7 +26,7 @@ const SignUpForm = () => {
 
   return (
     <form
-      className="rounded bg-neutral px-8 pt-6 pb-8 mb-4 w-[45vw]"
+      className="rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="mb-4 ">

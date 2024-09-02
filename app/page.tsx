@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import LoginForm from "./components/forms/login";
 import Heading from "./components/heading";
 

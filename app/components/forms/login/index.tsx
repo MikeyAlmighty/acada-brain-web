@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -16,13 +17,20 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     // Handle login logic here
-    console.log("Form Data:", data);
+    const result = await signIn("credentials", {
+      redirect: true,
+      callbackUrl: "/users",
+      username: data.username,
+      password: data.password,
+    });
+
+    console.log("Result", result);
   };
 
   return (
-    <div className="w-full max-w-xs">
+    <div>
       <form
         className="rounded bg-neutral px-8 pt-6 pb-8 mb-4"
         onSubmit={handleSubmit(onSubmit)}
