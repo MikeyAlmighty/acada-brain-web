@@ -5,6 +5,9 @@ import NextAuth from "next-auth/next";
 import { BACKEND_URL } from "@/constants";
 
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: "/",
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
