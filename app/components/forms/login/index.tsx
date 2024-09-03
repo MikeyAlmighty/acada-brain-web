@@ -20,7 +20,7 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     await signIn("credentials", {
       redirect: true,
-      callbackUrl: "/users",
+      callbackUrl: "/lessons",
       username: data.username,
       password: data.password,
     });
