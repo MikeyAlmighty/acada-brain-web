@@ -1,10 +1,11 @@
 "use client";
 
-import { BACKEND_URL } from "@/constants";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+
+import { BACKEND_URL } from "@/constants";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 export type FormValues = {
   firstName: string;
@@ -15,7 +16,7 @@ export type FormValues = {
   phoneNumber: string;
 };
 
-const Toasty = dynamic(() => import("@/app/components/toasty"));
+const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
 const SignUpForm = () => {
   const {
@@ -25,7 +26,6 @@ const SignUpForm = () => {
     reset,
   } = useForm<FormValues>();
 
-  const [showToasty, setShowToasty] = useState<boolean>(false);
   const router = useRouter();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -40,9 +40,10 @@ const SignUpForm = () => {
         },
       });
       if (response.ok) {
-        setShowToasty(true);
+        toast("New User Created!");
       }
     } catch (error) {
+      toast("Oops! Error creating a new User, Please try again!");
       console.error(error);
     } finally {
       reset();
@@ -53,10 +54,10 @@ const SignUpForm = () => {
   return (
     <>
       <form
-        className="rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
+        className="flex flex-col items-center rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="mb-4 ">
+        <div className="mb-4">
           <label className="block text-sm font-bold mb-2" htmlFor="username">
             Username
           </label>
@@ -148,7 +149,7 @@ const SignUpForm = () => {
           )}
         </div>
 
-        <div className="mb-6">
+        <div className="py-2">
           <label className="block text-sm font-bold mb-2" htmlFor="password">
             Password
           </label>
@@ -166,17 +167,12 @@ const SignUpForm = () => {
           )}
         </div>
         <div className="flex items-center justify-between">
-          <button type="submit" className="btn btn-primary w-full mb-4">
+          <button type="submit" className="btn btn-primary mb-4">
             Sign Up
           </button>
         </div>
+        <ClientToastContainer />
       </form>
-      {showToasty && (
-        <Toasty
-          onClose={() => setShowToasty(false)}
-          text={"New User Created!"}
-        />
-      )}
     </>
   );
 };

@@ -1,7 +1,10 @@
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
 import LoginForm from "./components/forms/login";
 import Heading from "./components/heading";
+
+const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
 export default function Home() {
   return (
@@ -11,6 +14,7 @@ export default function Home() {
       <div className="flex h-screen">
         <LoginForm />
       </div>
+      <ClientToastContainer />
     </main>
   );
 }
