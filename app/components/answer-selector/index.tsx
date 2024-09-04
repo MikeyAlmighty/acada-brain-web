@@ -1,9 +1,13 @@
 "use client";
 
+import { FieldValues, UseFormRegister } from "react-hook-form";
+
 type AnswerSelectorProps = {
+  questionIndex: number;
   selectedAnswer: number;
   index: number;
   handleAnswerSelect: (answer: number) => void;
+  register: UseFormRegister<FieldValues>;
 };
 
 const labelMatch = (index: number) => {
@@ -42,8 +46,10 @@ const labelMatch = (index: number) => {
 
 const AnswerSelector = ({
   selectedAnswer,
+  questionIndex,
   handleAnswerSelect,
   index,
+  register,
 }: AnswerSelectorProps) => {
   const { label, toggleColor } = labelMatch(index + 1);
   return (
@@ -52,11 +58,17 @@ const AnswerSelector = ({
       <input
         type="checkbox"
         checked={selectedAnswer === index}
-        onClick={() => handleAnswerSelect(index)}
+        onChange={() => handleAnswerSelect(index)}
         className={`toggle toggle-${toggleColor} mx-2`}
       />
       <label className="input input-bordered w-36 mx-2 flex items-center gap-2">
-        <input type="text" className="grow" />
+        <input
+          type="text"
+          className="grow"
+          required
+          placeholder="Option"
+          {...register(`questions.${questionIndex}.answers.${index}.option`)}
+        />
       </label>
     </div>
   );

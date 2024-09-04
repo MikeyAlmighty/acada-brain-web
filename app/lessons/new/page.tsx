@@ -4,27 +4,67 @@ import { useState } from "react";
 
 import Heading from "@/app/components/heading";
 import Question from "@/app/components/question";
+import { useForm } from "react-hook-form";
 
 const NewLessonPage = () => {
+  const [fields, setFields] = useState([{ name: "" }]);
   const [questionCount, setQuestionCount] = useState<number>(1);
-  const [questions, setQuestions] = useState();
+
+  const { handleSubmit, register } = useForm();
+
+  const addField = () => {
+    setFields([...fields, { name: "" }]);
+  };
+
+  // const removeField = (index: number) => {
+  //   setFields(fields.filter((_, i) => i !== index));
+  // }
+
+  const onSubmit = (data) => {
+    console.log("Form submission:", data);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <Heading text="Add Lesson" />
-      <div className="flex flex-col items-center bg-neutral">
-        <div className="flex flex-col max-h-[50vh] pt-12 rounded overflow-y-auto w-[45vw] items-center justify-around">
-          {Array.from({ length: questionCount }).map((_, index) => (
-            <Question key={index} questionIndex={index} />
-          ))}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Heading text="Add Lesson" />
+        <div className="flex flex-col items-center bg-neutral">
+          <label className="input input-bordered m-12 w-[15vw] flex items-center gap-2">
+            <input
+              type="text"
+              required
+              {...register("name")}
+              placeholder={"Name"}
+            />
+          </label>
+          <input
+            type="file"
+            className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+          />
+
+          <div className="flex flex-col max-h-[50vh] rounded overflow-y-auto w-[45vw] items-center justify-around">
+            {Array.from({ length: questionCount }).map((_, index) => (
+              <Question register={register} key={index} questionIndex={index} />
+            ))}
+          </div>
+          <button
+            onClick={() => {
+              setQuestionCount(questionCount + 1);
+              addField();
+            }}
+            className="btn btn-secondary my-12 w-25"
+          >
+            Add Question
+          </button>
         </div>
         <button
-          onClick={() => setQuestionCount(questionCount + 1)}
-          className="btn btn-secondary my-12 w-25"
+          /* onClick={() => console.log(questions)} */
+          type="submit"
+          className="btn btn-primary w-72 mt-12"
         >
-          Add Question
+          Save
         </button>
-      </div>
-      <button className="btn btn-primary w-72 mt-12">Add Lesson</button>
+      </form>
     </main>
   );
 };

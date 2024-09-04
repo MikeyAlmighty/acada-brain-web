@@ -1,20 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import { FieldValues, UseFormRegister } from "react-hook-form";
+
 import AnswerSelector from "../answer-selector";
 
 type QuestionProps = {
   questionIndex: number;
+  register: UseFormRegister<FieldValues>;
 };
 
-const Question = ({ questionIndex }: QuestionProps) => {
+const Question = ({ questionIndex, register }: QuestionProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState(0);
+
   return (
     <div>
       <div className="flex items-center justify-around mt-[2em] px-48 w-full">
         <label className="input input-bordered p-[2em] mx-2 w-full flex items-center gap-2">
           {questionIndex + 1}
-          <input type="text" className="grow" placeholder="Question" />
+          <input
+            type="text"
+            className="grow"
+            required
+            placeholder="Question"
+            {...register(`questions.${questionIndex}.name`)}
+            placeholder={`Question`}
+          />
         </label>
         <button className="btn btn-circle btn-neutral">
           <svg
@@ -36,10 +47,12 @@ const Question = ({ questionIndex }: QuestionProps) => {
       <div className="flex justify-center">
         {Array.from({ length: 4 }).map((_, index) => (
           <AnswerSelector
+            questionIndex={questionIndex}
             index={index}
-            handleAnswerSelect={(answer) => setSelectedAnswer(answer)}
             selectedAnswer={selectedAnswer}
             key={index}
+            register={register}
+            handleAnswerSelect={(index) => setSelectedAnswer(index)}
           />
         ))}
       </div>
