@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { BACKEND_URL } from "@/constants";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
+import ImageUpload from "../../image-upload";
 
 export type FormValues = {
   userId: string;
@@ -27,7 +28,6 @@ const EditUserForm = (data: FormValues) => {
     formState: { errors },
   } = useForm<FormValues>({ defaultValues: { ...data } });
 
-  console.log("session", session);
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       const response = await fetch(BACKEND_URL + `/users/${data.userId}`, {
@@ -52,7 +52,8 @@ const EditUserForm = (data: FormValues) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center">
+      <ImageUpload />
       <form
         className="flex flex-col items-center rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
         onSubmit={handleSubmit(onSubmit)}
@@ -158,7 +159,7 @@ const EditUserForm = (data: FormValues) => {
         </div>
         <ClientToastContainer />
       </form>
-    </>
+    </div>
   );
 };
 
