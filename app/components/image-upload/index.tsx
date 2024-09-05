@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { BACKEND_URL } from "@/constants";
 import Image from "next/image";
+import ProfilePicture from "../profile-picture";
 
 const ImageUpload = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -53,18 +54,26 @@ const ImageUpload = () => {
 
   return (
     <div className="pb-12 flex flex-col items-center justify-center">
-      {preview && (
-        <div className="overflow-hidden rounded-full">
+      <div className="overflow-hidden rounded-full">
+        {preview ? (
           <Image
             className="object-cover"
             src={preview}
-            alt="Preview"
-            height={250}
+            alt="Preview Profile Picture"
+            height={550}
             width={250}
           />
-        </div>
-      )}
-      <input className="file-input file-input-bordered my-12 file-input-primary w-full max-w-xs" type="file" onChange={handleFileChange} />
+        ) : (
+          // TODO: Remove hardcoded string
+          <ProfilePicture userId={46} />
+        )}
+      </div>
+
+      <input
+        className="file-input file-input-bordered my-12 file-input-primary w-full max-w-xs"
+        type="file"
+        onChange={handleFileChange}
+      />
       <button
         className="btn btn-neutral w-full"
         onClick={handleUpload}
