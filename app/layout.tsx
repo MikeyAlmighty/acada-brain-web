@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Providers from "./components/providers";
 import "react-toastify/dist/ReactToastify.css";
+import Header from "./components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="en" data-theme="dracula">
       <link rel="icon" href="/Logo.svg" type="image/svg+xml" />
       <Providers>
+        <Header />
         <body className={inter.className}>{children}</body>
       </Providers>
     </html>

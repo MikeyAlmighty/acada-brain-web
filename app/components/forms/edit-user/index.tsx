@@ -1,13 +1,14 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { BACKEND_URL } from "@/constants";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
 export type FormValues = {
+  userId: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -18,36 +19,35 @@ export type FormValues = {
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
-const SignUpForm = () => {
+const EditUserForm = (data: FormValues) => {
+  const { data: session } = useSession();
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({ defaultValues: { ...data } });
 
-  const router = useRouter();
-
+  console.log("session", session);
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const response = await fetch(BACKEND_URL + "/users/signup", {
-        method: "POST",
+      const response = await fetch(BACKEND_URL + `/users/${data.userId}`, {
+        method: "PUT",
         body: JSON.stringify({
-          ...data,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phoneNumber: data.phoneNumber,
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user.accessToken}`,
         },
       });
       if (response.ok) {
-        toast("New User Created!");
+        toast("User Details Updated!");
       }
     } catch (error) {
-      toast("Oops! Error creating a new User, Please try again!");
+      toast("Oops! Error editing User details, Please try again!");
       console.error(error);
-    } finally {
-      reset();
-      router.push("/users");
     }
   };
 
@@ -63,6 +63,7 @@ const SignUpForm = () => {
           </label>
           <input
             id="username"
+            disabled
             type="text"
             placeholder="Username"
             className={`input input-bordered w-full ${errors.username ? "input-error" : ""}`}
@@ -118,6 +119,7 @@ const SignUpForm = () => {
           <input
             id="email"
             type="text"
+            disabled
             placeholder="Email Addres"
             className={`input input-bordered w-full ${errors.username ? "input-error" : ""}`}
             {...register("email", { required: "Email Address is required" })}
@@ -149,26 +151,9 @@ const SignUpForm = () => {
           )}
         </div>
 
-        <div className="py-2">
-          <label className="block text-sm font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            className={`input input-bordered w-full ${errors.password ? "input-error" : ""}`}
-            {...register("password", { required: "Password is required" })}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-xs italic">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
         <div className="flex items-center justify-between">
           <button type="submit" className="btn btn-secondary mb-4">
-            Sign Up
+            Edit
           </button>
         </div>
         <ClientToastContainer />
@@ -177,4 +162,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default EditUserForm;

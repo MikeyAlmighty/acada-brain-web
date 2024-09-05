@@ -7,7 +7,7 @@ export const AddLesson = () => {
   return (
     <div>
       <button
-        className="btn btn-primary"
+        className="btn btn-secondary"
         onClick={() => router.push("/lessons/new")}
       >
         Create Lesson

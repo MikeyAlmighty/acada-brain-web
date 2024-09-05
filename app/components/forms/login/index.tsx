@@ -67,7 +67,7 @@ const LoginForm = () => {
           )}
         </div>
         <div className="flex items-center justify-between">
-          <button type="submit" className="btn btn-primary w-full mb-4">
+          <button type="submit" className="btn btn-secondary w-full mb-4">
             Sign In
           </button>
         </div>
