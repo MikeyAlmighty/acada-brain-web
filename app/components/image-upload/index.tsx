@@ -24,7 +24,6 @@ const ImageUpload = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-    console.log("file", file);
 
     setUploading(true);
 
@@ -65,7 +64,7 @@ const ImageUpload = () => {
           />
         </div>
       )}
-      <input className="py-12" type="file" onChange={handleFileChange} />
+      <input className="file-input file-input-bordered my-12 file-input-primary w-full max-w-xs" type="file" onChange={handleFileChange} />
       <button
         className="btn btn-neutral w-full"
         onClick={handleUpload}

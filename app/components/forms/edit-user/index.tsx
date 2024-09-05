@@ -153,7 +153,7 @@ const EditUserForm = (data: FormValues) => {
         </div>
 
         <div className="flex items-center justify-between">
-          <button type="submit" className="btn btn-secondary mb-4">
+          <button type="submit" className="btn btn-secondary my-4">
             Edit
           </button>
         </div>
