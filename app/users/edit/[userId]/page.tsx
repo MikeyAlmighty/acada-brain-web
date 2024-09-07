@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import EditUserForm from "@/app/components/forms/edit-user";
 import Heading from "@/app/components/heading";
-import { BACKEND_URL } from "@/constants";
+import { getUserFetch } from "@/app/fetch/user";
 
 type EditUserPageProps = {
   params: {
@@ -14,13 +14,8 @@ type EditUserPageProps = {
 export default async function EditUserPage({ params }: EditUserPageProps) {
   const { userId } = params;
   const session = await getServerSession(authOptions);
-  const res = await fetch(`${BACKEND_URL}/users/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${session?.user.accessToken}`,
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await res.json();
+  const data = await getUserFetch(userId, session?.user?.accessToken);
+
   return (
     <div>
       <Heading text="Edit user" />
