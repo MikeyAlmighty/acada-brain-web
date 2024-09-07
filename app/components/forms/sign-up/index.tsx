@@ -1,14 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { v4 as uuidv4 } from "uuid";
+
 import { profilePictureUploadFetch, signUpFetch } from "@/app/fetch/user";
 import { SignUpFormValues } from "@/app/types/user";
 import ImageUpload from "../../image-upload";
-import { useState } from "react";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
@@ -25,8 +26,8 @@ const SignUpForm = () => {
 
   const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
     try {
-      const { id } = await signUpFetch(data);
-      console.log("sending in : ", id, file);
+      const id = uuidv4();
+      await signUpFetch({ ...data, id });
       await profilePictureUploadFetch(id, file);
     } catch (error) {
       toast("Oops! Error creating a new User, Please try again!");

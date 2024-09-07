@@ -14,7 +14,7 @@ const signUpFetch = async (data: SignUpFormValues): Promise<SignUpResponse> => {
 };
 
 const profilePictureUploadFetch = async (
-  userId: number,
+  userId: string,
   file: File | null | undefined,
 ) => {
   if (!file) return;
@@ -32,7 +32,7 @@ const profilePictureUploadFetch = async (
 };
 
 const editUserFetch = async (
-  userId: number,
+  userId: string,
   data: EditFormValues,
   accessToken: string | undefined,
 ) => {

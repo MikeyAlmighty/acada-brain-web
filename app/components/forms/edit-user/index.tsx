@@ -7,12 +7,18 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { EditFormValues } from "@/app/types/user";
-import { editUserFetch } from "@/app/fetch/user";
+import { editUserFetch, profilePictureUploadFetch } from "@/app/fetch/user";
+import { useState } from "react";
+import ImageUpload from "../../image-upload";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
 const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [file, setFile] = useState<File | null>();
+
   const { data: session } = useSession();
+
   const {
     register,
     handleSubmit,
@@ -22,7 +28,10 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
   const onSubmit: SubmitHandler<EditFormValues> = async (data) => {
     try {
       if (session?.user.id) {
-        await editUserFetch(session?.user.id, data, session?.user.accessToken);
+        await Promise.all([
+          profilePictureUploadFetch(session?.user.id, file),
+          editUserFetch(session?.user.id, data, session?.user.accessToken),
+        ]);
         toast("User Details Updated!");
       }
     } catch (error) {
@@ -30,17 +39,20 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
       console.error(error);
     }
   };
-  console.log("imgUrl: ", data?.imgUrl)
 
   return (
     <div className="flex flex-col items-center">
-      <Image
-        className="object-cover rounded-full mb-12"
-        width={250}
-        height={250}
-        src={data?.imgUrl ? data.imgUrl : "/default-avatar.svg"}
-        alt="Profile Picture"
-      />
+      {isDisabled ? (
+        <Image
+          className="object-cover rounded-full mb-12"
+          width={250}
+          height={250}
+          src={data?.imgUrl ? data.imgUrl : "/default-avatar.svg"}
+          alt="Profile Picture"
+        />
+      ) : (
+        <ImageUpload handleUpload={(file) => setFile(file)} />
+      )}
       <form
         className="flex flex-col items-center rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
         onSubmit={handleSubmit(onSubmit)}
@@ -71,6 +83,7 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
           <input
             id="firstName"
             type="text"
+            disabled={isDisabled}
             placeholder="First Name"
             className={`input input-bordered w-full ${errors.username ? "input-error" : ""}`}
             {...register("firstName", { required: "First Name is required" })}
@@ -89,6 +102,7 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
           <input
             id="lastName"
             type="text"
+            disabled={isDisabled}
             placeholder="Last Name"
             className={`input input-bordered w-full ${errors.username ? "input-error" : ""}`}
             {...register("lastName", { required: "Last Name is required" })}
@@ -127,6 +141,7 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
           <input
             id="phoneNumber"
             placeholder="Phone Number"
+            disabled={isDisabled}
             className={`input input-bordered w-full ${errors.phoneNumber ? "input-error" : ""}`}
             {...register("phoneNumber", {
               required: "Phone Number is required",
@@ -139,8 +154,15 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
           )}
         </div>
 
-        <div className="flex items-center justify-between">
-          <button type="submit" className="btn btn-secondary my-4">
+        <div className={"flex items-center justify-between flex-col"}>
+          <button
+            type="submit"
+            onClick={() => setIsDisabled(false)}
+            className={`btn ${!isDisabled && "btn-disabled"} btn-info my-4 w-25`}
+          >
+            Edit
+          </button>
+          <button type="submit" className="btn btn-secondary my-4 w-36">
             Save
           </button>
         </div>

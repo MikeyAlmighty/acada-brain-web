@@ -1,4 +1,5 @@
 export type SignUpFormValues = {
+  id: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -24,4 +25,4 @@ export type EditFormValues = {
   email: string;
   password: string;
   phoneNumber: string;
-}
+};
