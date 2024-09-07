@@ -1,14 +1,15 @@
 import { fetchData } from "@/app/lib/fetch-service";
-import { SignUpFormValues, SignUpResponse } from "@/app/types/user";
+import {
+  EditFormValues,
+  SignUpFormValues,
+  SignUpResponse,
+} from "@/app/types/user";
 import { BACKEND_URL } from "@/constants";
 
 const signUpFetch = async (data: SignUpFormValues): Promise<SignUpResponse> => {
   return await fetchData(BACKEND_URL + "/users/signup", {
     method: "POST",
     body: JSON.stringify({ ...data }),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 };
 
@@ -30,4 +31,27 @@ const profilePictureUploadFetch = async (
   });
 };
 
-export { signUpFetch, profilePictureUploadFetch };
+const editUserFetch = async (
+  userId: number,
+  data: EditFormValues,
+  accessToken: string | undefined,
+) => {
+  const { firstName, lastName, phoneNumber } = data;
+  return await fetchData(
+    BACKEND_URL + `/users/${userId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        phoneNumber,
+      }),
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+    false,
+  );
+};
+
+export { signUpFetch, profilePictureUploadFetch, editUserFetch };

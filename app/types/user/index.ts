@@ -15,3 +15,13 @@ export type SignUpResponse = {
   phoneNumber: string;
   id: number;
 };
+
+export type EditFormValues = {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+}

@@ -2,47 +2,27 @@
 
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-
-import { BACKEND_URL } from "@/constants";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
-export type FormValues = {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-};
+import { EditFormValues } from "@/app/types/user";
+import { editUserFetch } from "@/app/fetch/user";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
-const EditUserForm = (data: FormValues & { imgUrl: string }) => {
+const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
   const { data: session } = useSession();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({ defaultValues: { ...data } });
+  } = useForm<EditFormValues>({ defaultValues: data });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<EditFormValues> = async (data) => {
     try {
-      const response = await fetch(BACKEND_URL + `/users/${data.userId}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          phoneNumber: data.phoneNumber,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user.accessToken}`,
-        },
-      });
-      if (response.ok) {
+      if (session?.user.id) {
+        await editUserFetch(session?.user.id, data, session?.user.accessToken);
         toast("User Details Updated!");
       }
     } catch (error) {
@@ -50,6 +30,7 @@ const EditUserForm = (data: FormValues & { imgUrl: string }) => {
       console.error(error);
     }
   };
+  console.log("imgUrl: ", data?.imgUrl)
 
   return (
     <div className="flex flex-col items-center">
@@ -57,7 +38,7 @@ const EditUserForm = (data: FormValues & { imgUrl: string }) => {
         className="object-cover rounded-full mb-12"
         width={250}
         height={250}
-        src={data.imgUrl ? data.imgUrl : "/default-avatar.svg"}
+        src={data?.imgUrl ? data.imgUrl : "/default-avatar.svg"}
         alt="Profile Picture"
       />
       <form
