@@ -160,7 +160,7 @@ const EditUserForm = (data: FormValues & { imgUrl: string }) => {
 
         <div className="flex items-center justify-between">
           <button type="submit" className="btn btn-secondary my-4">
-            Edit
+            Save
           </button>
         </div>
         <ClientToastContainer />
