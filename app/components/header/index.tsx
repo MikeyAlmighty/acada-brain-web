@@ -32,7 +32,7 @@ export default function Header() {
               >
                 <div className="w-10 rounded-full">
                   <img
-                    src={session?.user?.image || "/default-avatar.png"}
+                    src={session?.user?.image || "/default-avatar.svg"}
                     alt="User Avatar"
                   />
                 </div>

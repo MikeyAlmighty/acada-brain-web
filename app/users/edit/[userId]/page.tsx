@@ -5,7 +5,13 @@ import EditUserForm from "@/app/components/forms/edit-user";
 import Heading from "@/app/components/heading";
 import { BACKEND_URL } from "@/constants";
 
-export default async function EditUserPage({ params }) {
+type EditUserPageProps = {
+  params: {
+    userId: string;
+  };
+};
+
+export default async function EditUserPage({ params }: EditUserPageProps) {
   const { userId } = params;
   const session = await getServerSession(authOptions);
   const res = await fetch(`${BACKEND_URL}/users/${userId}`, {
@@ -18,7 +24,7 @@ export default async function EditUserPage({ params }) {
   return (
     <div>
       <Heading text="Edit user" />
-      <EditUserForm userId={userId} {...data} />
+      <EditUserForm {...data} />
     </div>
   );
 }

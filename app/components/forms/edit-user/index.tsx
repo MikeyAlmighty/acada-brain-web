@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { BACKEND_URL } from "@/constants";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
-import ImageUpload from "../../image-upload";
+import Image from "next/image";
 
 export type FormValues = {
   userId: string;
@@ -20,7 +20,7 @@ export type FormValues = {
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
-const EditUserForm = (data: FormValues) => {
+const EditUserForm = (data: FormValues & { imgUrl: string }) => {
   const { data: session } = useSession();
   const {
     register,
@@ -53,7 +53,13 @@ const EditUserForm = (data: FormValues) => {
 
   return (
     <div className="flex flex-col items-center">
-      <ImageUpload />
+      <Image
+        className="object-cover rounded-full mb-12"
+        width={250}
+        height={250}
+        src={data.imgUrl ? data.imgUrl : "/default-avatar.svg"}
+        alt="Profile Picture"
+      />
       <form
         className="flex flex-col items-center rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
         onSubmit={handleSubmit(onSubmit)}

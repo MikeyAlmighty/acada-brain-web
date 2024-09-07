@@ -2,46 +2,32 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { BACKEND_URL } from "@/constants";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-
-export type FormValues = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-};
+import { profilePictureUploadFetch, signUpFetch } from "@/app/fetch/user";
+import { SignUpFormValues } from "@/app/types/user";
+import ImageUpload from "../../image-upload";
+import { useState } from "react";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
 const SignUpForm = () => {
+  const [file, setFile] = useState<File | null>();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormValues>();
+  } = useForm<SignUpFormValues>();
 
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
     try {
-      const response = await fetch(BACKEND_URL + "/users/signup", {
-        method: "POST",
-        body: JSON.stringify({
-          ...data,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        toast("New User Created!");
-      }
+      const { id } = await signUpFetch(data);
+      console.log("sending in : ", id, file);
+      await profilePictureUploadFetch(id, file);
     } catch (error) {
       toast("Oops! Error creating a new User, Please try again!");
       console.error(error);
@@ -58,6 +44,7 @@ const SignUpForm = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="mb-4">
+          <ImageUpload handleUpload={(file) => setFile(file)} />
           <label className="block text-sm font-bold mb-2" htmlFor="username">
             Username
           </label>

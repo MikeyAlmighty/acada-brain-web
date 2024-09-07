@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import Heading from "@/app/components/heading";
 import Question from "@/app/components/question";
-import { useForm } from "react-hook-form";
+import ImageUpload from "@/app/components/image-upload";
 
 const NewLessonPage = () => {
   const [fields, setFields] = useState([{ name: "" }]);
@@ -37,10 +38,14 @@ const NewLessonPage = () => {
               placeholder={"Name"}
             />
           </label>
-          <input
-            type="file"
-            className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-          />
+
+          <div className="flex flex-col items-center">
+            <h1 className="m-12 w-[15vw] text-center items-center gap-2"></h1>
+            <ImageUpload
+              location={`content/46.png`}
+              uploadTitle="Upload Lesson Thumbnail"
+            />
+          </div>
 
           <div className="flex flex-col max-h-[50vh] rounded overflow-y-auto w-[45vw] items-center justify-around">
             {Array.from({ length: questionCount }).map((_, index) => (

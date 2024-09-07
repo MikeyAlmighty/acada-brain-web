@@ -1,71 +1,47 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import axios from "axios";
-import { BACKEND_URL } from "@/constants";
 import Image from "next/image";
-import ProfilePicture from "../profile-picture";
 
-const ImageUpload = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+type ImageUploadProps = {
+  showPreview?: boolean;
+  handleUpload: (file: File | null) => void;
+};
+
+const ImageUpload = ({
+  showPreview = true,
+  handleUpload,
+}: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-
-  const { data: session } = useSession();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
       const previewUrl = URL.createObjectURL(e?.target?.files[0]);
       setPreview(previewUrl);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file) return;
-
-    setUploading(true);
-
-    const newFileName = `${session?.user.id}.png`;
-    const renamedFile = new File([file], newFileName, { type: file.type });
-
-    const formData = new FormData();
-    formData.append("file", renamedFile);
-    try {
-      const response = await axios.post(
-        BACKEND_URL + "/content/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${session?.user.accessToken}`,
-          },
-        },
-      );
-      setFileUrl(response.data.fileUrl);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    } finally {
-      setUploading(false);
+      handleUpload(e.target.files[0]);
     }
   };
 
   return (
     <div className="pb-12 flex flex-col items-center justify-center">
       <div className="overflow-hidden rounded-full">
-        {preview ? (
+        {showPreview && preview ? (
           <Image
             className="object-cover"
             src={preview}
-            alt="Preview Profile Picture"
+            alt="Preview Image"
             height={550}
             width={250}
           />
         ) : (
-          // TODO: Remove hardcoded string
-          <ProfilePicture userId={46} />
+          <Image
+            className="object-cover"
+            src={"/default-avatar.svg"}
+            alt="Default Image"
+            height={550}
+            width={250}
+          />
         )}
       </div>
 
@@ -74,18 +50,6 @@ const ImageUpload = () => {
         type="file"
         onChange={handleFileChange}
       />
-      <button
-        className="btn btn-neutral w-full"
-        onClick={handleUpload}
-        disabled={uploading}
-      >
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
-      {fileUrl && (
-        <div className="pt-1">
-          <img className="rounded" src={fileUrl} alt="Uploaded" />
-        </div>
-      )}
     </div>
   );
 };
