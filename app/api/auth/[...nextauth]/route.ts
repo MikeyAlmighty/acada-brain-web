@@ -22,23 +22,29 @@ export const authOptions: NextAuthOptions = {
           type: "password",
           placeholder: "Password",
         },
+        role: {
+          label: "Role",
+          type: "text",
+        },
       },
       async authorize(credentials, req) {
         if (!credentials?.username || !credentials?.password) return null;
 
-        const { username, password } = credentials;
+        const { username, password, role } = credentials;
         try {
-          const res = await fetch(BACKEND_URL + "/users/login", {
+          const res = await fetch(BACKEND_URL + "/auth/login", {
             method: "POST",
             body: JSON.stringify({
               username,
               password,
+              role,
             }),
             headers: {
               "Content-Type": "application/json",
             },
           });
 
+          console.log("res: ", res);
           if (res.status === 401) {
             console.log(res.statusText);
 
@@ -60,10 +66,21 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      if (user) {
+        token.accessToken = user.accessToken;
+        token.username = user.username;
+        token.role = user.role;
+        token.imgUrl = user.imgUrl;
+        token.id = user.id;
+      }
+      return token;
     },
     async session({ session, token }) {
-      session.user = token;
+      session.accessToken = token.accessToken;
+      session.username = token.username;
+      session.role = token.role;
+      session.imgUrl = token.imgUrl;
+      session.id = token.id;
       return session;
     },
   },

@@ -7,30 +7,48 @@ import Heading from "@/app/components/heading";
 import Question from "@/app/components/question";
 import ImageUpload from "@/app/components/image-upload";
 
+type LessonFormValues = {
+  description: string;
+  name: {
+    question: string;
+    answers: {
+      option: string;
+      isCorrect: boolean;
+    }[];
+  }[];
+};
+
 const NewLessonPage = () => {
   const [fields, setFields] = useState([{ name: "" }]);
   const [questionCount, setQuestionCount] = useState<number>(1);
+  const [file, setFile] = useState<File | null | undefined>();
 
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register, unregister } = useForm<LessonFormValues>();
 
   const addField = () => {
     setFields([...fields, { name: "" }]);
   };
 
-  // const removeField = (index: number) => {
-  //   setFields(fields.filter((_, i) => i !== index));
-  // }
+  const removeField = (index: number) => {
+    setQuestionCount((prev) => prev - 1);
+    setFields(fields.filter((_, i) => i !== index));
+    unregister(`questions.${index}`);
+  };
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: LessonFormValues) => {
     console.log("Form submission:", data);
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="flex items-center flex-col"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Heading text="Add Lesson" />
         <div className="flex flex-col items-center bg-neutral">
           <label className="input input-bordered m-12 w-[15vw] flex items-center gap-2">
+            Name
             <input
               type="text"
               required
@@ -38,18 +56,37 @@ const NewLessonPage = () => {
               placeholder={"Name"}
             />
           </label>
+          <label className="w-[15vw] flex flex-col items-center gap-2">
+            Description
+            <textarea
+              {...register("description")}
+              placeholder="Description"
+              className="textarea textarea-bordered textarea-lg w-full max-w-xs"
+            ></textarea>
+          </label>
 
           <div className="flex flex-col items-center">
-            <h1 className="m-12 w-[15vw] text-center items-center gap-2"></h1>
-            <ImageUpload
-              location={`content/46.png`}
-              uploadTitle="Upload Lesson Thumbnail"
-            />
+            <h1 className="m-2 w-[15vw] text-center items-center gap-2"></h1>
+            <label className="flex flex-col items-center">
+              <p className="pb-2">Thumbnail</p>
+              <ImageUpload
+                imageHeight={250}
+                imageWidth={100}
+                handleUpload={(file) => {
+                  setFile(file);
+                }}
+              />
+            </label>
           </div>
 
           <div className="flex flex-col max-h-[50vh] rounded overflow-y-auto w-[45vw] items-center justify-around">
             {Array.from({ length: questionCount }).map((_, index) => (
-              <Question register={register} key={index} questionIndex={index} />
+              <Question
+                handleQuestionRemove={removeField}
+                register={register}
+                key={index}
+                questionIndex={index}
+              />
             ))}
           </div>
           <button
@@ -57,7 +94,7 @@ const NewLessonPage = () => {
               setQuestionCount(questionCount + 1);
               addField();
             }}
-            className="btn btn-secondary my-12 w-25"
+            className="btn btn-secondary my-6 w-25"
           >
             Add Question
           </button>

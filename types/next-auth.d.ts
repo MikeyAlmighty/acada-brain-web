@@ -3,16 +3,9 @@ import NextAuth from "next-auth/next";
 declare module "next-auth" {
   interface Session {
     accessToken: string;
-    user: {
-      name: string;
-      email: string;
-      sub: string;
-      accessToken: string;
-      id: string;
-      firstName: string;
-      lastName: string;
-      username: string;
-      phoneNumber: string;
-    };
+    id: string;
+    username: string;
+    imgUrl: string;
+    role: "lecturer" | "learner";
   }
 }

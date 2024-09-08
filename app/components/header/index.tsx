@@ -16,9 +16,9 @@ export default function Header() {
   return (
     <header className="navbar bg-primary shadow-md">
       <div className="flex-1">
-        <a className="btn btn-primary text-white normal-case text-xl">
-          Acada Brain
-        </a>
+        <span className="btn-primary text-white normal-case text-4xl">
+          AcadaBrain
+        </span>
       </div>
 
       <div className="flex-none gap-2">
@@ -32,7 +32,7 @@ export default function Header() {
               >
                 <div className="w-10 rounded-full">
                   <img
-                    src={session?.user?.image || "/default-avatar.svg"}
+                    src={session?.imgUrl || "/default-avatar.svg"}
                     alt="User Avatar"
                   />
                 </div>
@@ -44,13 +44,13 @@ export default function Header() {
                 >
                   <li>
                     <a
-                      onClick={() =>
-                        router.push(`/users/edit/${session.user.id}`)
-                      }
+                      onClick={() => router.push(`/users/edit/${session.id}`)}
                       className="justify-between"
                     >
-                      {session?.user?.name}
-                      <span className="badge badge-secondary">User</span>
+                      {session?.username}
+                      <span className="badge badge-secondary">
+                        {session.role === "lecturer" ? "Lecturer" : "Learner"}
+                      </span>
                     </a>
                     <a
                       onClick={() => router.push(`/lessons`)}
@@ -60,7 +60,13 @@ export default function Header() {
                     </a>
                   </li>
                   <li>
-                    <a onClick={() => signOut()}>Logout</a>
+                    <a
+                      onClick={() =>
+                        signOut({ redirect: true, callbackUrl: "/" })
+                      }
+                    >
+                      Logout
+                    </a>
                   </li>
                 </ul>
               )}

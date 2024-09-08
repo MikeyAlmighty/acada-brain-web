@@ -14,7 +14,7 @@ type EditUserPageProps = {
 export default async function EditUserPage({ params }: EditUserPageProps) {
   const { userId } = params;
   const session = await getServerSession(authOptions);
-  const data = await getUserFetch(userId, session?.user?.accessToken);
+  const data = await getUserFetch(userId, session?.accessToken, session?.role);
 
   return (
     <div>

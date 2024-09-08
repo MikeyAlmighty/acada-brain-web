@@ -4,11 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 
 type ImageUploadProps = {
+  imageWidth: number;
+  imageHeight: number;
   showPreview?: boolean;
   handleUpload: (file: File | null) => void;
 };
 
 const ImageUpload = ({
+  imageHeight = 550,
+  imageWidth = 250,
   showPreview = true,
   handleUpload,
 }: ImageUploadProps) => {
@@ -24,23 +28,23 @@ const ImageUpload = ({
   };
 
   return (
-    <div className="pb-12 flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       <div className="overflow-hidden rounded-full">
         {showPreview && preview ? (
           <Image
             className="object-cover"
             src={preview}
             alt="Preview Image"
-            height={550}
-            width={250}
+            height={imageHeight}
+            width={imageWidth}
           />
         ) : (
           <Image
             className="object-cover"
             src={"/default-avatar.svg"}
             alt="Default Image"
-            height={550}
-            width={250}
+            height={imageHeight}
+            width={imageWidth}
           />
         )}
       </div>

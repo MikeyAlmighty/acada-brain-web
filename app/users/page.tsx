@@ -19,7 +19,7 @@ const UserPage = () => {
                 {session?.user?.name}
               </h2>
               <p className="text-sm text-gray-600">{session?.user?.email}</p>
-              {/* <p className="mt-2 text-gray-600">{user.bio}</p> */}
+              <p className="mt-2 text-gray-600">{session?.user.imgUrl}</p>
             </div>
             <div className="mt-6 flex justify-center">
               <button className="btn btn-primary">Edit Profile</button>

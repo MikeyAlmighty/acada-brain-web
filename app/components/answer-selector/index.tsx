@@ -4,9 +4,7 @@ import { FieldValues, UseFormRegister } from "react-hook-form";
 
 type AnswerSelectorProps = {
   questionIndex: number;
-  selectedAnswer: number;
   index: number;
-  handleAnswerSelect: (answer: number) => void;
   register: UseFormRegister<FieldValues>;
 };
 
@@ -45,9 +43,7 @@ const labelMatch = (index: number) => {
 };
 
 const AnswerSelector = ({
-  selectedAnswer,
   questionIndex,
-  handleAnswerSelect,
   index,
   register,
 }: AnswerSelectorProps) => {
@@ -57,8 +53,9 @@ const AnswerSelector = ({
       {label}
       <input
         type="checkbox"
-        checked={selectedAnswer === index}
-        onChange={() => handleAnswerSelect(index)}
+        // value={selectedAnswer === index}
+        // onChange={() => handleAnswerSelect(index)}
+        {...register(`questions.${questionIndex}.answers.${index}.isCorrect`)}
         className={`toggle toggle-${toggleColor} mx-2`}
       />
       <label className="input input-bordered w-36 mx-2 flex items-center gap-2">

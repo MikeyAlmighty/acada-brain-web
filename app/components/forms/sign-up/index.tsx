@@ -25,16 +25,17 @@ const SignUpForm = () => {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
+    const id = uuidv4();
+
     try {
-      const id = uuidv4();
       await signUpFetch({ ...data, id });
       await profilePictureUploadFetch(id, file);
+      router.push(`/`);
     } catch (error) {
       toast("Oops! Error creating a new User, Please try again!");
       console.error(error);
     } finally {
       reset();
-      router.push("/users");
     }
   };
 
@@ -64,7 +65,7 @@ const SignUpForm = () => {
         </div>
 
         <div className="mb-4 ">
-          <label className="block text-sm font-bold mb-2" htmlFor="username">
+          <label className="block text-sm font-bold mb-2" htmlFor="firstName">
             First Name
           </label>
           <input
@@ -82,7 +83,7 @@ const SignUpForm = () => {
         </div>
 
         <div className="mb-4 ">
-          <label className="block text-sm font-bold mb-2" htmlFor="username">
+          <label className="block text-sm font-bold mb-2" htmlFor="lastName">
             Last Name
           </label>
           <input
@@ -100,7 +101,7 @@ const SignUpForm = () => {
         </div>
 
         <div className="mb-4 ">
-          <label className="block text-sm font-bold mb-2" htmlFor="username">
+          <label className="block text-sm font-bold mb-2" htmlFor="email">
             Email Address
           </label>
           <input
@@ -153,6 +154,16 @@ const SignUpForm = () => {
               {errors.password.message}
             </p>
           )}
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text pr-2">Is Lecturer?</span>
+            <input
+              {...register("isLecturer")}
+              type="checkbox"
+              className="toggle toggle-primary"
+            />
+          </label>
         </div>
         <div className="flex items-center justify-between">
           <button type="submit" className="btn btn-secondary mb-4">

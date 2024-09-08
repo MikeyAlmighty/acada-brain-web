@@ -1,16 +1,15 @@
 import { fetchData } from "@/app/lib/fetch-service";
-import {
-  EditFormValues,
-  SignUpFormValues,
-  SignUpResponse,
-} from "@/app/types/user";
+import { EditFormValues, SignUpFormValues } from "@/app/types/user";
 import { BACKEND_URL } from "@/constants";
 
-const signUpFetch = async (data: SignUpFormValues): Promise<SignUpResponse> => {
-  return await fetchData(BACKEND_URL + "/users/signup", {
-    method: "POST",
-    body: JSON.stringify({ ...data }),
-  });
+const signUpFetch = async (data: SignUpFormValues) => {
+  await fetchData(
+    BACKEND_URL + `/auth/signup/${data.isLecturer ? "lecturer" : "learner"}`,
+    {
+      method: "POST",
+      body: JSON.stringify({ ...data }),
+    },
+  );
 };
 
 const profilePictureUploadFetch = async (
@@ -35,10 +34,12 @@ const editUserFetch = async (
   userId: string,
   data: EditFormValues,
   accessToken: string | undefined,
+  role: "lecturer" | "learner",
 ) => {
   const { firstName, lastName, phoneNumber } = data;
   return await fetchData(
-    BACKEND_URL + `/users/${userId}`,
+    BACKEND_URL +
+      `/${role === "lecturer" ? "lecturers" : "learners"}/${userId}`,
     {
       method: "PUT",
       body: JSON.stringify({
@@ -57,14 +58,18 @@ const editUserFetch = async (
 const getUserFetch = async (
   userId: string,
   accessToken: string | null | undefined,
+  role: "lecturer" | "learner",
 ) => {
   if (accessToken) {
-    return await fetchData(`${BACKEND_URL}/users/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    return await fetchData(
+      `${BACKEND_URL}/${role === "lecturer" ? "lecturers" : "learners"}/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    });
+    );
   }
 };
 
-export { signUpFetch, profilePictureUploadFetch, editUserFetch, getUserFetch };
+export { profilePictureUploadFetch, signUpFetch, editUserFetch, getUserFetch };

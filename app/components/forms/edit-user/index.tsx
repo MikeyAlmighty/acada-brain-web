@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -8,7 +9,6 @@ import Image from "next/image";
 
 import { EditFormValues } from "@/app/types/user";
 import { editUserFetch, profilePictureUploadFetch } from "@/app/fetch/user";
-import { useState } from "react";
 import ImageUpload from "../../image-upload";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
@@ -27,12 +27,13 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
 
   const onSubmit: SubmitHandler<EditFormValues> = async (data) => {
     try {
-      if (session?.user.id) {
+      if (session?.id) {
         await Promise.all([
-          profilePictureUploadFetch(session?.user.id, file),
-          editUserFetch(session?.user.id, data, session?.user.accessToken),
+          profilePictureUploadFetch(session?.id, file),
+          editUserFetch(session?.id, data, session?.accessToken, session?.role),
         ]);
         toast("User Details Updated!");
+        setIsDisabled(true);
       }
     } catch (error) {
       toast("Oops! Error editing User details, Please try again!");
@@ -51,8 +52,18 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
           alt="Profile Picture"
         />
       ) : (
-        <ImageUpload handleUpload={(file) => setFile(file)} />
+        <ImageUpload
+          imageHeight={200}
+          imageWidth={150}
+          handleUpload={(file) => setFile(file)}
+        />
       )}
+      <button
+        onClick={() => setIsDisabled(false)}
+        className={`btn ${!isDisabled && "btn-disabled"} btn-info my-4 w-36`}
+      >
+        Edit
+      </button>
       <form
         className="flex flex-col items-center rounded bg-neutral px-8 pt-6 pb-8 mb-4 md:w-[45vw]"
         onSubmit={handleSubmit(onSubmit)}
@@ -157,12 +168,9 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
         <div className={"flex items-center justify-between flex-col"}>
           <button
             type="submit"
-            onClick={() => setIsDisabled(false)}
-            className={`btn ${!isDisabled && "btn-disabled"} btn-info my-4 w-25`}
+            disabled={isDisabled}
+            className="btn btn-secondary my-4 w-48"
           >
-            Edit
-          </button>
-          <button type="submit" className="btn btn-secondary my-4 w-36">
             Save
           </button>
         </div>

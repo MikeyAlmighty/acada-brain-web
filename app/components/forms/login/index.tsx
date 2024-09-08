@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 type FormValues = {
   username: string;
   password: string;
+  isLecturer: boolean;
 };
 
 const LoginForm = () => {
@@ -20,8 +21,9 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     await signIn("credentials", {
       redirect: true,
-      callbackUrl: "/lessons",
+      callbackUrl: `/lessons`,
       username: data.username,
+      role: data.isLecturer ? "lecturer" : "learner",
       password: data.password,
     });
   };
@@ -66,6 +68,14 @@ const LoginForm = () => {
             </p>
           )}
         </div>
+        <label className="label cursor-pointer">
+          <span className="label-text pr-2">Is Lecturer?</span>
+          <input
+            {...register("isLecturer")}
+            type="checkbox"
+            className="toggle toggle-primary"
+          />
+        </label>
         <div className="flex items-center justify-between">
           <button type="submit" className="btn btn-secondary w-full mb-4">
             Sign In

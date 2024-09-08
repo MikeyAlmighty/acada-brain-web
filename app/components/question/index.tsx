@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { FieldValues, UseFormRegister } from "react-hook-form";
 
 import AnswerSelector from "../answer-selector";
@@ -8,11 +7,14 @@ import AnswerSelector from "../answer-selector";
 type QuestionProps = {
   questionIndex: number;
   register: UseFormRegister<FieldValues>;
+  handleQuestionRemove: (index: number) => void;
 };
 
-const Question = ({ questionIndex, register }: QuestionProps) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(0);
-
+const Question = ({
+  questionIndex,
+  register,
+  handleQuestionRemove,
+}: QuestionProps) => {
   return (
     <div>
       <div className="flex items-center justify-around mt-[2em] px-48 w-full">
@@ -24,10 +26,12 @@ const Question = ({ questionIndex, register }: QuestionProps) => {
             required
             placeholder="Question"
             {...register(`questions.${questionIndex}.name`)}
-            placeholder={`Question`}
           />
         </label>
-        <button className="btn btn-circle btn-neutral">
+        <button
+          onClick={() => handleQuestionRemove(questionIndex)}
+          className="btn btn-circle btn-neutral"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -47,12 +51,10 @@ const Question = ({ questionIndex, register }: QuestionProps) => {
       <div className="flex justify-center">
         {Array.from({ length: 4 }).map((_, index) => (
           <AnswerSelector
+            key={index}
             questionIndex={questionIndex}
             index={index}
-            selectedAnswer={selectedAnswer}
-            key={index}
             register={register}
-            handleAnswerSelect={(index) => setSelectedAnswer(index)}
           />
         ))}
       </div>
