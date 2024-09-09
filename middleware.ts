@@ -1,6 +1,9 @@
-// Without a defined matcher, this one line applies next-auth
-// to the entire project
+import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 
-export { default } from "next-auth/middleware";
+export default withAuth(function middleware(request: NextRequestWithAuth) {}, {
+  callbacks: {
+    authorized: ({ token }) => token?.role === "lecturer",
+  },
+});
 
-export const config = { matcher: ["/users"] };
+export const config = { matcher: ["/users", "/lessons/new"] };

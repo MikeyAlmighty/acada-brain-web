@@ -6,7 +6,6 @@ export type SignUpFormValues = {
   email: string;
   password: string;
   phoneNumber: string;
-  lecturerId: string | null;
   isLecturer: boolean;
 };
 

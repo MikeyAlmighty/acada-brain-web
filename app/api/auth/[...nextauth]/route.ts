@@ -44,7 +44,6 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          console.log("res: ", res);
           if (res.status === 401) {
             console.log(res.statusText);
 

@@ -58,6 +58,12 @@ export default function Header() {
                     >
                       Lessons
                     </a>
+                    <a
+                      onClick={() => router.push(`/learners`)}
+                      className="justify-between"
+                    >
+                      Learners
+                    </a>
                   </li>
                   <li>
                     <a

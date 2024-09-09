@@ -55,21 +55,4 @@ const editUserFetch = async (
   );
 };
 
-const getUserFetch = async (
-  userId: string,
-  accessToken: string | null | undefined,
-  role: "lecturer" | "learner",
-) => {
-  if (accessToken) {
-    return await fetchData(
-      `${BACKEND_URL}/${role === "lecturer" ? "lecturers" : "learners"}/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
-  }
-};
-
-export { profilePictureUploadFetch, signUpFetch, editUserFetch, getUserFetch };
+export { profilePictureUploadFetch, signUpFetch, editUserFetch };

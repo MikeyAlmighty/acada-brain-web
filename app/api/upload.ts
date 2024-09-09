@@ -16,7 +16,7 @@ handler.use(upload.single("file")).post(async (req, res) => {
       body: req.file.buffer,
       headers: {
         "Content-Type": req.file.mimetype,
-        Authorization: `Bearer ${session?.user.accessToken}`,
+        Authorization: `Bearer ${session?.accessToken}`,
       },
     });
 
