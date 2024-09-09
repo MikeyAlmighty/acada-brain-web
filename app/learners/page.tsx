@@ -4,7 +4,7 @@ import { getLearnersForLecturer } from "../fetch/lecturer";
 import { AddLearner } from "./add-learner";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import LearnerTable from "../components/tables/user-table";
+import LearnerTable from "../components/tables/learner-table";
 
 const UserPage = async () => {
   const session = await getServerSession(authOptions);
