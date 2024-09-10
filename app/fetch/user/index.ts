@@ -12,24 +12,6 @@ const signUpFetch = async (data: SignUpFormValues) => {
   );
 };
 
-const profilePictureUploadFetch = async (
-  userId: string,
-  file: File | null | undefined,
-) => {
-  if (!file) return;
-
-  const renamedFile = new File([file], `profile-pictures/${userId}.png`, {
-    type: file.type,
-  });
-
-  const formData = new FormData();
-  formData.append("file", renamedFile);
-  await fetch(BACKEND_URL + "/content/upload/image", {
-    method: "POST",
-    body: formData,
-  });
-};
-
 const editUserFetch = async (
   userId: string,
   data: EditFormValues,
@@ -55,4 +37,4 @@ const editUserFetch = async (
   );
 };
 
-export { profilePictureUploadFetch, signUpFetch, editUserFetch };
+export { signUpFetch, editUserFetch };

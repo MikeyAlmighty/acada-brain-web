@@ -6,11 +6,11 @@ import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 
-import { profilePictureUploadFetch } from "@/app/fetch/user";
 import { SignUpFormValues } from "@/app/types/user";
 import ImageUpload from "../../image-upload";
 import { useSession } from "next-auth/react";
 import { assignLearnerFetch } from "@/app/fetch/learner";
+import { profilePictureUploadFetch } from "@/app/fetch/content";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 

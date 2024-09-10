@@ -8,7 +8,9 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { EditFormValues } from "@/app/types/user";
-import { editUserFetch, profilePictureUploadFetch } from "@/app/fetch/user";
+import { editUserFetch } from "@/app/fetch/user";
+import { profilePictureUploadFetch } from "@/app/fetch/content";
+
 import ImageUpload from "../../image-upload";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));

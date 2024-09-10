@@ -25,7 +25,7 @@ const Question = ({
             className="grow"
             required
             placeholder="Question"
-            {...register(`questions.${questionIndex}.name`)}
+            {...register(`questions.${questionIndex}.question`)}
           />
         </label>
         <button

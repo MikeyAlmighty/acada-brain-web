@@ -2,21 +2,14 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
 
 import Heading from "@/app/components/heading";
 import Question from "@/app/components/question";
 import ImageUpload from "@/app/components/image-upload";
-
-type LessonFormValues = {
-  description: string;
-  name: {
-    question: string;
-    answers: {
-      option: string;
-      isCorrect: boolean;
-    }[];
-  }[];
-};
+import { videoUploadFetch } from "@/app/fetch/content";
+import { LessonFormValues } from "@/app/types/lesson";
+import { createLessonFetch } from "@/app/fetch/lesson";
 
 const NewLessonPage = () => {
   const [fields, setFields] = useState([{ name: "" }]);
@@ -35,8 +28,13 @@ const NewLessonPage = () => {
     unregister(`questions.${index}`);
   };
 
-  const onSubmit = (data: LessonFormValues) => {
+  const onSubmit = async (data: LessonFormValues) => {
+    const id = uuidv4();
     console.log("Form submission:", data);
+    await Promise.all([
+      createLessonFetch({ ...data, id }),
+      videoUploadFetch(id, file),
+    ]);
   };
 
   return (
@@ -52,8 +50,8 @@ const NewLessonPage = () => {
             <input
               type="text"
               required
-              {...register("name")}
-              placeholder={"Name"}
+              {...register("title")}
+              placeholder={"title"}
             />
           </label>
           <label className="w-[15vw] flex flex-col items-center gap-2">
