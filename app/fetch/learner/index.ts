@@ -17,18 +17,31 @@ const getLearnerFetch = async (
 };
 
 const assignLearnerFetch = async (
+  image: string | Blob,
   data: SignUpFormValues,
   lecturerId: string,
   accessToken: string,
 ) => {
   if (accessToken) {
     const id = uuidv4();
-    return await fetchData(`${BACKEND_URL}/learners/${lecturerId}`, {
+    const formData = new FormData();
+
+    formData.append("id", id);
+    formData.append("firstName", data.firstName);
+    formData.append("lastName", data.lastName);
+    formData.append("isLecturer", false);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("username", data.username);
+    formData.append("phoneNumber", data.phoneNumber);
+    image && formData.append("image", image);
+
+    await fetch(`${BACKEND_URL}/learners/${lecturerId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ ...data, id }),
+      body: formData,
     });
   }
 };

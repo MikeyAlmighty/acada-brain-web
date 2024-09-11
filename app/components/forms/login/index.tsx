@@ -83,7 +83,7 @@ const LoginForm = () => {
         </div>
       </form>
       <button
-        onClick={() => router.push("/users/sign-up")}
+        onClick={() => router.push("/users/sign-up/new")}
         className="btn btn-neutral w-full"
       >
         Sign Up

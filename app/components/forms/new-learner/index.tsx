@@ -4,13 +4,11 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
-import { v4 as uuidv4 } from "uuid";
 
 import { SignUpFormValues } from "@/app/types/user";
 import ImageUpload from "../../image-upload";
 import { useSession } from "next-auth/react";
 import { assignLearnerFetch } from "@/app/fetch/learner";
-import { profilePictureUploadFetch } from "@/app/fetch/content";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
@@ -25,13 +23,11 @@ const NewLearnerForm = () => {
   } = useForm<SignUpFormValues>();
 
   const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
-    const learnerId = uuidv4();
     const lecturerId = session?.id;
 
     try {
       if (lecturerId) {
-        await assignLearnerFetch(data, lecturerId, session?.accessToken);
-        await profilePictureUploadFetch(learnerId, file);
+        await assignLearnerFetch(file, data, lecturerId, session?.accessToken);
       }
     } catch (error) {
       toast("Oops! Error creating a new Learner, Please try again!");

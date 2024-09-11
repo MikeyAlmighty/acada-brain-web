@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { SignUpFormValues } from "@/app/types/user";
 import { signUpFetch } from "@/app/fetch/user";
-import { profilePictureUploadFetch } from "@/app/fetch/content";
 import ImageUpload from "../../image-upload";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
@@ -28,17 +27,14 @@ const SignUpForm = () => {
   const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
     const id = uuidv4();
 
+    console.log("submitting form");
     try {
-      await Promise.all([
-        signUpFetch({ ...data, id }),
-        profilePictureUploadFetch(id, file),
-      ]);
-      router.push(`/`);
+      await signUpFetch({ ...data, id, image: file }), router.push(`/`);
     } catch (error) {
       toast("Oops! Error creating a new User, Please try again!");
       console.error(error);
     } finally {
-      reset();
+      // reset();
     }
   };
 

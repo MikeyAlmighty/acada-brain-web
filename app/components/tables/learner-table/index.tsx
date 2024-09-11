@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 type LearnerTableProps = {
@@ -12,8 +13,7 @@ type LearnerTableProps = {
 };
 
 const LearnerTable = ({ learners }: LearnerTableProps) => {
-  const [selectedLearnerIds, setSelectedLearnerIds] = useState<strin[]>([]);
-  console.log(selectedLearnerIds);
+  const [selectedLearnerIds, setSelectedLearnerIds] = useState<string[]>([]);
 
   const handleLearnerSelect = (learnerId: string) => {
     if (selectedLearnerIds.includes(learnerId)) {
@@ -24,6 +24,7 @@ const LearnerTable = ({ learners }: LearnerTableProps) => {
       setSelectedLearnerIds([...selectedLearnerIds, learnerId]);
     }
   };
+  console.log("learners: ", learners);
 
   return (
     <div className="overflow-x-auto">
@@ -32,13 +33,14 @@ const LearnerTable = ({ learners }: LearnerTableProps) => {
         <thead>
           <tr>
             <th></th>
+            <th>Avatar</th>
             <th>Username</th>
             <th>First Name</th>
             <th>Last Name</th>
           </tr>
         </thead>
         <tbody>
-          {learners.map(({ id, firstName, lastName, username }) => (
+          {learners.map(({ id, firstName, lastName, username, imgUrl }) => (
             <tr className="hover">
               <th>
                 <label>
@@ -48,6 +50,14 @@ const LearnerTable = ({ learners }: LearnerTableProps) => {
                     className="checkbox checkbox-primary"
                   />
                 </label>
+              </th>
+              <th>
+                <Image
+                  src={imgUrl ? imgUrl : "/default-avatar.svg"}
+                  width={25}
+                  height={25}
+                  alt={"Profile Picture"}
+                />
               </th>
               <th>{firstName}</th>
               <th>{lastName}</th>

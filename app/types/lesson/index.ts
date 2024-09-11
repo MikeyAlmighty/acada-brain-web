@@ -1,4 +1,5 @@
 export type LessonFormValues = {
+  id: string;
   title: string;
   description: string;
   question: {

@@ -10,11 +10,13 @@ import ImageUpload from "@/app/components/image-upload";
 import { videoUploadFetch } from "@/app/fetch/content";
 import { LessonFormValues } from "@/app/types/lesson";
 import { createLessonFetch } from "@/app/fetch/lesson";
+import { useSession } from "next-auth/react";
 
 const NewLessonPage = () => {
   const [fields, setFields] = useState([{ name: "" }]);
   const [questionCount, setQuestionCount] = useState<number>(1);
   const [file, setFile] = useState<File | null | undefined>();
+  const { data: session } = useSession();
 
   const { handleSubmit, register, unregister } = useForm<LessonFormValues>();
 
@@ -30,11 +32,12 @@ const NewLessonPage = () => {
 
   const onSubmit = async (data: LessonFormValues) => {
     const id = uuidv4();
-    console.log("Form submission:", data);
-    await Promise.all([
-      createLessonFetch({ ...data, id }),
-      videoUploadFetch(id, file),
-    ]);
+    if (session?.accessToken) {
+      await Promise.all([
+        createLessonFetch(session.accessToken, { ...data, id }),
+        videoUploadFetch(id, file),
+      ]);
+    }
   };
 
   return (
@@ -66,7 +69,7 @@ const NewLessonPage = () => {
           <div className="flex flex-col items-center">
             <h1 className="m-2 w-[15vw] text-center items-center gap-2"></h1>
             <label className="flex flex-col items-center">
-              <p className="pb-2">Thumbnail</p>
+              <p className="pb-2">Video</p>
               <ImageUpload
                 imageHeight={250}
                 imageWidth={100}
