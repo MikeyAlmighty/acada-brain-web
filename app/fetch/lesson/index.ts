@@ -4,11 +4,19 @@ import { BACKEND_URL } from "@/constants";
 
 const createLessonFetch = async (
   accessToken: string,
-  data: LessonFormValues,
+  data: LessonFormValues & { video: File | null | undefined },
 ) => {
-  await fetchData(BACKEND_URL + `/lessons/`, {
+  const formData = new FormData();
+
+  formData.append("id", data.id);
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  formData.append("questions", JSON.stringify(data.questions));
+  data.video && formData.append("video", data.video);
+
+  await fetch(BACKEND_URL + `/lessons/`, {
     method: "POST",
-    body: JSON.stringify({ ...data }),
+    body: formData,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

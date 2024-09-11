@@ -2,7 +2,7 @@ export type LessonFormValues = {
   id: string;
   title: string;
   description: string;
-  question: {
+  questions: {
     text: string;
     answers: {
       option: string;

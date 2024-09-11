@@ -33,10 +33,11 @@ const NewLessonPage = () => {
   const onSubmit = async (data: LessonFormValues) => {
     const id = uuidv4();
     if (session?.accessToken) {
-      await Promise.all([
-        createLessonFetch(session.accessToken, { ...data, id }),
-        videoUploadFetch(id, file),
-      ]);
+      await createLessonFetch(session.accessToken, {
+        ...data,
+        id,
+        video: file,
+      });
     }
   };
 
