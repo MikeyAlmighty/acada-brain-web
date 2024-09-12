@@ -36,6 +36,7 @@ const NewLessonPage = () => {
       await createLessonFetch(session.accessToken, {
         ...data,
         id,
+        lecturerId: session.id,
         video: file,
       });
     }

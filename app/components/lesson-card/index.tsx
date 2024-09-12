@@ -1,14 +1,17 @@
-import { AddLesson } from "./add-lesson";
+"use client";
+import { useRouter } from "next/navigation";
 
 type LessonCardProps = {
   title: string;
+  id: string;
   description: string;
 };
 
-const LessonCard = ({ title, description }: LessonCardProps) => {
+const LessonCard = ({ id, title, description }: LessonCardProps) => {
+  const router = useRouter();
   return (
-    <div className="pt-2">
-      <div className="card bg-base-100 shadow-xl">
+    <div onClick={() => router.push(`/lessons/view/${id}`)} className="pt-2">
+      <div className="transition-transform duration-300 hover:scale-110 cursor-pointer card h-[20vh] bg-base-100 shadow-xl">
         <figure>
           <img
             src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
