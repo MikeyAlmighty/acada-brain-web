@@ -10,3 +10,17 @@ export type LessonFormValues = {
     }[];
   };
 };
+
+export type LessonResponse = {
+  id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  questions: {
+    text: string;
+    answers: {
+      option: string;
+      isCorrect: boolean;
+    }[];
+  };
+};

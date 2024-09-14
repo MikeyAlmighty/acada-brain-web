@@ -1,4 +1,5 @@
 import { fetchData } from "@/app/lib/fetch-service";
+import { Learner } from "@/app/types/learner";
 import { LessonFormValues } from "@/app/types/lesson";
 import { BACKEND_URL } from "@/constants";
 
@@ -6,6 +7,7 @@ const createLessonFetch = async (
   accessToken: string,
   data: LessonFormValues & {
     video: File | null | undefined;
+    learnerIds: string[];
     lecturerId: string;
   },
 ) => {
@@ -15,6 +17,7 @@ const createLessonFetch = async (
   formData.append("title", data.title);
   formData.append("description", data.description);
   formData.append("questions", JSON.stringify(data.questions));
+  formData.append("learnerIds", JSON.stringify(data.learnerIds));
   data.video && formData.append("video", data.video);
 
   await fetch(BACKEND_URL + `/lessons/${data.lecturerId}`, {

@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import { SignUpFormValues } from "@/app/types/user";
 import ImageUpload from "../../image-upload";
 import { useSession } from "next-auth/react";
-import { assignLearnerFetch } from "@/app/fetch/learner";
+import { createLearnerFetch } from "@/app/fetch/learner";
 
 const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
@@ -27,7 +27,7 @@ const NewLearnerForm = () => {
 
     try {
       if (lecturerId) {
-        await assignLearnerFetch(file, data, lecturerId, session?.accessToken);
+        await createLearnerFetch(file, data, lecturerId, session?.accessToken);
       }
     } catch (error) {
       toast("Oops! Error creating a new Learner, Please try again!");

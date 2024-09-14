@@ -11,7 +11,7 @@ const UserPage = async () => {
   const data =
     session?.id &&
     (await getLearnersForLecturer(session.id, session?.accessToken));
-  console.log("learners", data.learners);
+
   return (
     <main className="flex min-h-screen flex-col items-center">
       <Heading text="Learners" />

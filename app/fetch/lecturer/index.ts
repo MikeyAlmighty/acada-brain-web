@@ -19,11 +19,15 @@ const getLearnersForLecturer = async (
   accessToken: string,
 ) => {
   if (accessToken && lecturerId) {
-    return await fetchData(`${BACKEND_URL}/lecturers/${lecturerId}/learners`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const data = await fetchData(
+      `${BACKEND_URL}/lecturers/${lecturerId}/learners`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    });
+    );
+    return data.learners;
   }
 };
 

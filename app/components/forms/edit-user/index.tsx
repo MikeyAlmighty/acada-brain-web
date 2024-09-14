@@ -9,11 +9,8 @@ import Image from "next/image";
 
 import { EditFormValues } from "@/app/types/user";
 import { editUserFetch } from "@/app/fetch/user";
-import { profilePictureUploadFetch } from "@/app/fetch/content";
 
 import ImageUpload from "../../image-upload";
-
-const ClientToastContainer = dynamic(() => import("@/app/components/toasty"));
 
 const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -30,11 +27,13 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
   const onSubmit: SubmitHandler<EditFormValues> = async (data) => {
     try {
       if (session?.id) {
-        await Promise.all([
-          profilePictureUploadFetch(session?.id, file),
-          editUserFetch(session?.id, data, session?.accessToken, session?.role),
-        ]);
-        toast("User Details Updated!");
+        await editUserFetch(
+          session?.id,
+          data,
+          session?.accessToken,
+          session?.role,
+        ),
+          toast("User Details Updated!");
         setIsDisabled(true);
       }
     } catch (error) {
@@ -176,7 +175,6 @@ const EditUserForm = (data: EditFormValues & { imgUrl: string }) => {
             Save
           </button>
         </div>
-        <ClientToastContainer />
       </form>
     </div>
   );

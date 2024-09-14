@@ -16,7 +16,7 @@ const getLearnerFetch = async (
   }
 };
 
-const assignLearnerFetch = async (
+const createLearnerFetch = async (
   image: string | Blob,
   data: SignUpFormValues,
   lecturerId: string,
@@ -30,6 +30,7 @@ const assignLearnerFetch = async (
     formData.append("firstName", data.firstName);
     formData.append("lastName", data.lastName);
     formData.append("isLecturer", false);
+    formData.append("isActive", true);
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("username", data.username);
@@ -46,4 +47,4 @@ const assignLearnerFetch = async (
   }
 };
 
-export { getLearnerFetch, assignLearnerFetch };
+export { getLearnerFetch, createLearnerFetch };

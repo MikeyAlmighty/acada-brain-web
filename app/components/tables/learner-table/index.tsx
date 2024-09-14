@@ -1,30 +1,32 @@
 "use client";
 
+import { getLearnersForLecturer } from "@/app/fetch/lecturer";
+import { Learner } from "@/app/types/learner";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type LearnerTableProps = {
-  learners: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    username: string;
-  }[];
+  onLearnerSelect: (learnerId: string) => void;
 };
 
-const LearnerTable = ({ learners }: LearnerTableProps) => {
-  const [selectedLearnerIds, setSelectedLearnerIds] = useState<string[]>([]);
+const LearnerTable = ({ onLearnerSelect }: LearnerTableProps) => {
+  const [learners, setLearners] = useState<Learner[]>([]);
+  const { data: session } = useSession();
 
-  const handleLearnerSelect = (learnerId: string) => {
-    if (selectedLearnerIds.includes(learnerId)) {
-      setSelectedLearnerIds([
-        ...selectedLearnerIds.filter((id) => id !== learnerId),
-      ]);
-    } else {
-      setSelectedLearnerIds([...selectedLearnerIds, learnerId]);
-    }
-  };
-  console.log("learners: ", learners);
+  useEffect(() => {
+    const fetchLearners = async () => {
+      if (session?.id) {
+        const data = await getLearnersForLecturer(
+          session.id,
+          session?.accessToken,
+        );
+        console.log("data: ", data);
+        setLearners(data);
+      }
+    };
+    fetchLearners();
+  }, []);
 
   return (
     <div className="overflow-x-auto">
@@ -46,22 +48,22 @@ const LearnerTable = ({ learners }: LearnerTableProps) => {
                 <label>
                   <input
                     type="checkbox"
-                    onClick={() => handleLearnerSelect(id)}
+                    onClick={() => onLearnerSelect(id)}
                     className="checkbox checkbox-primary"
                   />
                 </label>
               </th>
               <th>
                 <Image
-                  src={imgUrl ? imgUrl : "/default-avatar.svg"}
+                  src={imgUrl ?? "/default-avatar.svg"}
+                  alt={"Profile Picture"}
                   width={25}
                   height={25}
-                  alt={"Profile Picture"}
                 />
               </th>
+              <th>{username}</th>
               <th>{firstName}</th>
               <th>{lastName}</th>
-              <th>{username}</th>
             </tr>
           ))}
         </tbody>
